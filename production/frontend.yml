@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mof-frontend
+spec:
+  selector:
+    matchLabels:
+      app: mof
+      service: frontend
+  template:
+    metadata:
+      labels:
+        app: mof
+        service: frontend
+    spec:
+      containers:
+        - name: mof-frontend
+          image: ghcr.io/map-of-feel/frontend:main-50da556
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mof-frontend
+spec:
+  selector:
+    app: mof
+    service: frontend
+  ports:
+    - port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mof-frontend
+  namespace: ca-mof
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-http
+  labels:
+    app: mof
+    service: frontend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: mof.haus-der-freunde.de
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: mof-frontend
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - mof.haus-der-freunde.de
+      secretName: mof-tls

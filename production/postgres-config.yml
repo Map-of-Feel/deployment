@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mof-postgres
+data:
+  POSTGRES_USER: mof
+  POSTGRES_DB: mof

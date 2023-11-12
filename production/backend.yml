@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mof-backend
+spec:
+  selector:
+    matchLabels:
+      app: mof
+      service: backend
+  template:
+    metadata:
+      labels:
+        app: mof
+        service: backend
+    spec:
+      initContainers:
+        - name: mof-backend
+          image: ghcr.io/map-of-feel/backend.db_migrations:main-1b3362a
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapRef:
+                  name: mof-postgres
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mof-postgres
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapRef:
+                  name: mof-postgres
+                  key: POSTGRES_DB
+      containers:
+        - name: mof-backend
+          image: ghcr.io/map-of-feel/backend:main-1b3362a
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapRef:
+                  name: mof-postgres
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mof-postgres
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapRef:
+                  name: mof-postgres
+                  key: POSTGRES_DB
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mof-backend
+spec:
+  selector:
+    app: mof
+    service: backend
+  ports:
+    - port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mof-backend
+  namespace: ca-mof
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-http
+  labels:
+    app: mof
+    service: backend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: mof.haus-der-freunde.de
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/api/"
+            backend:
+              service:
+                name: mof-backend
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - mof.haus-der-freunde.de
+      secretName: mof-tls

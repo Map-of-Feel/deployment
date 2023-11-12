@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mof-postgres
+spec:
+  replicas: 1
+  serviceName: mof-postgres
+  selector:
+    matchLabels:
+      app: mof
+      service: postgres
+  template:
+    metadata:
+      labels:
+        app: mof
+        service: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - name: postgres
+              containerPort: 5432
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 500m
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapRef:
+                  name: mof-postgres
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mof-postgres
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapRef:
+                  name: mof-postgres
+                  key: POSTGRES_DB
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - $(POSTGRES_USER)
+                - -d
+                - $(POSTGRES_DB)
+            periodSeconds: 1
+          volumeMounts:
+            - name: db
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: db
+      spec:
+        storageClassName: rook-ceph-persistent-pool
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 4Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mof-postgres
+spec:
+  selector:
+      app: mof
+      service: postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
