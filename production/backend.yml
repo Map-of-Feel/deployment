@@ -102,4 +102,4 @@ spec:
   tls:
     - hosts:
         - mof.haus-der-freunde.de
-      secretName: mof-tls
+      secretName: mof-backend-tls
