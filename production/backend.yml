@@ -24,7 +24,7 @@ spec:
           env:
             - name: POSTGRES_USER
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: mof-postgres
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
@@ -34,7 +34,7 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: mof-postgres
                   key: POSTGRES_DB
       containers:
@@ -50,7 +50,7 @@ spec:
           env:
             - name: POSTGRES_USER
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: mof-postgres
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
@@ -60,7 +60,7 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: mof-postgres
                   key: POSTGRES_DB
 ---
