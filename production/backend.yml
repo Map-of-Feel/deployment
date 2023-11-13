@@ -89,7 +89,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: mof.haus-der-freunde.de
+    - host: map-of-feel.haus-voller-freunde.de
       http:
         paths:
           - pathType: Prefix
@@ -101,5 +101,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - mof.haus-der-freunde.de
+        - map-of-feel.haus-voller-freunde.de
       secretName: mof-backend-tls
