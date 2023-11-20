@@ -15,7 +15,7 @@ spec:
         service: backend
     spec:
       initContainers:
-        - name: mof-backend
+        - name: init
           image: ghcr.io/map-of-feel/backend.db_migrations:main-1b3362a
           resources:
             limits:
@@ -38,7 +38,7 @@ spec:
                   name: mof-postgres
                   key: POSTGRES_DB
       containers:
-        - name: mof-backend
+        - name: backend
           image: ghcr.io/map-of-feel/backend:main-1b3362a
           resources:
             limits:
