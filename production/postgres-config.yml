@@ -6,3 +6,4 @@ metadata:
 data:
   POSTGRES_USER: mof
   POSTGRES_DB: mof
+  POSTGRES_HOST: mof-postgres
