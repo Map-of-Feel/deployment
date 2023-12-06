@@ -22,6 +22,11 @@ spec:
               memory: "128Mi"
               cpu: "500m"
           env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mof-postgres
+                  key: POSTGRES_HOST
             - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
@@ -48,6 +53,11 @@ spec:
             - containerPort: 8080
               name: http
           env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mof-postgres
+                  key: POSTGRES_HOST
             - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
