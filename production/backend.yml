@@ -32,7 +32,7 @@ spec:
                 configMapKeyRef:
                   name: mof-postgres
                   key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mof-postgres
