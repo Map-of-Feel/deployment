@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init
-          image: ghcr.io/map-of-feel/backend.db_migrations:main-da6a7e2
+          image: ghcr.io/map-of-feel/backend.db_migrations:main-04366dc
           resources:
             limits:
               memory: "128Mi"
@@ -44,7 +44,7 @@ spec:
                   key: POSTGRES_DB
       containers:
         - name: backend
-          image: ghcr.io/map-of-feel/backend:main-da6a7e2
+          image: ghcr.io/map-of-feel/backend:main-04366dc
           resources:
             limits:
               memory: "128Mi"
