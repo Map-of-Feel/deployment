@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/map-of-feel/frontend:main-b24916f
+          image: ghcr.io/map-of-feel/frontend:main-aa6b681
           resources:
             limits:
               memory: "128Mi"
